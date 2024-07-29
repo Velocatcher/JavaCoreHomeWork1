@@ -44,30 +44,40 @@ docs:\
     ${JDOC}) ${JDOCDEST} ${JSRC} ${JCLASS} -subpackages ru
     
 – *Создать два Docker-образа. Один должен компилировать Java-проект обратно в
-папку на компьютере пользователя, а второй забирать скомпилированные клас-
-сы и исполнять их.
+папку на компьютере пользователя, второй забирать скомпилированные классы
+и исполнять их, третий создать документацию.
 
 Вариант решения
-Для упрощения был использован docker compose, вместо чистого Docker. Фай-
-лы, компилирующие и исполняющие программу представлены в листингах ни-
-же. Оба эти файла запускаются из корня папки проекта командами
+Для упрощения был использован docker compose, вместо чистого Docker. Файлы,
+компилирующие, исполняющие программу и создающие документацию представлены
+в листингах ниже. Файлы запускаются из корня папки проекта командами
 
 docker compose -f docker-compose-class.yml up\
 docker compose -f docker-compose-exec.yml up\
-Листинг 7: docker-compose-class.yml\
+docker compose -f docker-compose-exec.yml up
+
+Листинг : docker-compose-class.yml\
 services:\
  app:\
  image: bellsoft/liberica-openjdk-alpine:11.0.16.1-1\
- command: javac -sourcepath /app/src -d /app/out /app/src/sample/Main.java\
+ command: javac -sourcepath /src -d /app/out /app/src/sample/Main.java\
  volumes:\
  -./bin:/app/out\
  -./src:/app/src
 
-Листинг 8: docker-compose-exec.yml\
+Листинг : docker-compose-exec.yml\
  services:\
    app:\
      image: bellsoft/liberica-openjdk-alpine:11.0.16.1-1\
    command: java -classpath /app/out src.sample.Main\
    volumes:\
      - ./bin:/app/out
+
+Листинг : docker-compose-docs.yml\
+services:\
+app:\
+image: bellsoft/liberica-openjdk-alpine:11.0.16.1-1\
+command: javadoc -d docs -sourcepath /app/src -cp /app/out -subpackages regular sample 
+volumes:\
+    - ./bin:/app/out
 

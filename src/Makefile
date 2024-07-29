@@ -8,8 +8,8 @@ JSRC := -sourcepath ./$(SRC_DIR)
 JCLASS := -cp ./$(OUT_DIR)
 JCDEST := -d $(OUT_DIR)
 JDOCDEST := -d $(DOC_DIR)
-MAIN_SOURCE := ru/gb/jcore/sample/Main
-MAIN_CLASS := ru.gb.jcore.sample.Main
+MAIN_SOURCE := src/sample/Main
+MAIN_CLASS := src.sample.Main
 
 all:
     ${JC} ${JSRC} ${JCDEST} ${SRC_DIR}/${MAIN_SOURCE}.java
